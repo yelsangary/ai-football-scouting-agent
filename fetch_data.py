@@ -1,0 +1,95 @@
+import os
+import pandas as pd
+
+def generate_multi_position_dataset():
+    print("Building granular multi-position European scouting database...")
+    os.makedirs("data", exist_ok=True)
+
+    columns = [
+        "player_name", "team", "league", "position", "primary_role", "age", "minutes_played",
+        # Goalkeeping
+        "psxg_net_per90", "cross_stop_pct", "def_actions_outside_pen_per90", "pass_launch_pct",
+        # Buildup & Progression
+        "progressive_passes_per90", "progressive_pass_distance_per90", "progressive_carries_per90",
+        "passes_into_final_third_per90", "passes_under_pressure_per90", "pass_completion_pct",
+        # Defending & Physicality
+        "tackles_interceptions_per90", "aerial_duels_won_pct",
+        # Attacking & Creation
+        "npxg_per90", "xag_per90", "touches_att_pen_per90", "take_on_success_pct"
+    ]
+
+    data = [
+        # --- GOALKEEPERS (GK) ---
+        ("Alisson", "Liverpool", "Premier League", "GK", "Sweeper Keeper", 31, 2520, 0.22, 9.4, 1.85, 32.1, 2.1, 140.0, 0.2, 0.8, 4.2, 85.1, 0.4, 60.0, 0.0, 0.02, 0.1, 0.0),
+        ("Ederson", "Manchester City", "Premier League", "GK", "Ball-Playing Keeper", 30, 2900, 0.05, 5.1, 1.45, 24.5, 3.8, 220.0, 0.4, 1.4, 5.1, 88.4, 0.3, 50.0, 0.0, 0.05, 0.1, 0.0),
+        ("David Raya", "Arsenal", "Premier League", "GK", "Sweeper Keeper", 28, 2880, 0.12, 11.2, 1.60, 36.8, 2.9, 185.0, 0.3, 1.1, 4.8, 81.2, 0.5, 55.0, 0.0, 0.01, 0.1, 0.0),
+        ("André Onana", "Manchester United", "Premier League", "GK", "Ball-Playing Keeper", 28, 3420, 0.15, 6.2, 1.10, 42.0, 3.2, 210.0, 0.2, 0.9, 5.5, 78.5, 0.6, 52.0, 0.0, 0.01, 0.1, 0.0),
+        ("Gregor Kobel", "Borussia Dortmund", "Bundesliga", "GK", "Traditional Stopper", 26, 2430, 0.28, 5.8, 0.95, 45.1, 1.8, 110.0, 0.1, 0.5, 3.8, 74.2, 0.3, 58.0, 0.0, 0.00, 0.1, 0.0),
+        ("Guglielmo Vicario", "Tottenham", "Premier League", "GK", "Shot Stopper", 27, 3420, 0.24, 6.0, 1.70, 31.0, 2.4, 150.0, 0.3, 0.7, 5.2, 80.5, 0.4, 56.0, 0.0, 0.02, 0.1, 0.0),
+        ("Diogo Costa", "Porto", "Liga Portugal", "GK", "Sweeper Keeper", 24, 2970, 0.18, 8.5, 1.50, 34.0, 2.7, 175.0, 0.3, 1.0, 4.5, 83.0, 0.4, 62.0, 0.0, 0.03, 0.1, 0.0),
+        ("Bart Verbruggen", "Brighton", "Premier League", "GK", "Ball-Playing Keeper", 21, 1890, 0.08, 6.8, 1.35, 26.2, 3.4, 195.0, 0.4, 1.2, 5.0, 86.5, 0.3, 53.0, 0.0, 0.02, 0.1, 0.0),
+
+        # --- CENTER-BACKS (CB) ---
+        ("Lisandro Martínez", "Manchester United", "Premier League", "CB", "Ball-Playing CB", 26, 1280, 0, 0, 0, 0, 5.4, 410.2, 1.8, 4.1, 9.8, 88.5, 3.7, 61.5, 0.04, 0.06, 0.6, 62.5),
+        ("John Stones", "Manchester City", "Premier League", "CB", "Ball-Playing CB", 29, 1420, 0, 0, 0, 0, 6.1, 445.0, 2.3, 5.2, 11.2, 93.1, 2.8, 64.0, 0.06, 0.09, 1.2, 70.0),
+        ("Alessandro Bastoni", "Inter Milan", "Serie A", "CB", "Ball-Playing CB", 24, 2150, 0, 0, 0, 0, 5.8, 430.5, 2.1, 4.8, 9.1, 87.2, 3.3, 62.8, 0.05, 0.14, 1.1, 60.0),
+        ("William Saliba", "Arsenal", "Premier League", "CB", "Complete Stopper", 23, 3420, 0, 0, 0, 0, 4.2, 360.0, 1.4, 3.1, 8.4, 92.4, 2.9, 63.5, 0.05, 0.03, 0.8, 68.0),
+        ("Virgil van Dijk", "Liverpool", "Premier League", "CB", "Aerial Dominant CB", 32, 3180, 0, 0, 0, 0, 5.0, 480.0, 0.9, 3.6, 7.6, 91.2, 2.9, 81.2, 0.08, 0.04, 1.4, 55.0),
+        ("Jean-Clair Todibo", "West Ham", "Premier League", "CB", "Ball-Playing CB", 24, 2500, 0, 0, 0, 0, 5.1, 415.0, 1.7, 3.8, 9.2, 89.5, 3.8, 63.9, 0.03, 0.05, 0.7, 66.0),
+        ("Castello Lukeba", "RB Leipzig", "Bundesliga", "CB", "Ball-Playing CB", 21, 2400, 0, 0, 0, 0, 4.9, 380.0, 1.9, 3.5, 9.6, 88.0, 3.7, 60.1, 0.02, 0.04, 0.6, 61.0),
+        ("Gonçalo Inácio", "Sporting CP", "Liga Portugal", "CB", "Ball-Playing CB", 22, 2750, 0, 0, 0, 0, 6.2, 470.2, 1.9, 4.9, 8.9, 89.1, 3.3, 59.4, 0.07, 0.08, 0.9, 58.0),
+        ("Pau Cubarsí", "Barcelona", "La Liga", "CB", "Ball-Playing CB", 17, 1560, 0, 0, 0, 0, 6.3, 460.8, 1.7, 5.4, 10.8, 91.4, 3.0, 54.0, 0.02, 0.05, 0.5, 60.0),
+        ("Jarrad Branthwaite", "Everton", "Premier League", "CB", "Defensive Stopper", 21, 3120, 0, 0, 0, 0, 2.8, 290.4, 0.7, 1.9, 6.5, 80.5, 4.3, 68.4, 0.07, 0.02, 0.9, 50.0),
+        ("Murillo", "Nottingham Forest", "Premier League", "CB", "Aggressive Stopper", 21, 2800, 0, 0, 0, 0, 3.8, 395.0, 1.6, 2.8, 10.4, 82.1, 4.0, 58.2, 0.04, 0.04, 0.5, 59.0),
+
+        # --- FULLBACKS & WINGBACKS (LB, RB, LWB, RWB) ---
+        ("Riccardo Calafiori", "Arsenal", "Premier League", "LB", "Inverted Fullback", 22, 2450, 0, 0, 0, 0, 5.2, 390.5, 2.2, 4.0, 9.4, 86.8, 3.9, 67.2, 0.08, 0.12, 1.3, 64.5),
+        ("Trent Alexander-Arnold", "Liverpool", "Premier League", "RB", "Inverted Playmaker", 25, 2600, 0, 0, 0, 0, 8.2, 540.0, 2.5, 6.8, 11.5, 78.5, 2.8, 48.0, 0.11, 0.38, 1.4, 58.0),
+        ("Alphonso Davies", "Bayern Munich", "Bundesliga", "LB", "Attacking Overlapping Fullback", 23, 2300, 0, 0, 0, 0, 4.5, 280.0, 4.6, 3.8, 10.2, 85.4, 3.2, 54.0, 0.06, 0.22, 3.2, 63.0),
+        ("Pedro Porro", "Tottenham", "Premier League", "RB", "Attacking Wingback", 24, 2950, 0, 0, 0, 0, 5.6, 340.0, 2.8, 4.5, 9.8, 77.2, 4.1, 52.0, 0.12, 0.26, 2.8, 54.0),
+        ("Jeremie Frimpong", "Bayer Leverkusen", "Bundesliga", "RWB", "Attacking Wingback", 23, 2700, 0, 0, 0, 0, 3.8, 190.0, 4.8, 3.2, 9.5, 80.1, 2.4, 38.0, 0.32, 0.35, 6.5, 59.0),
+        ("Federico Dimarco", "Inter Milan", "Serie A", "LWB", "Crossing Specialist Wingback", 26, 2400, 0, 0, 0, 0, 6.2, 360.0, 2.9, 5.1, 8.8, 78.4, 2.6, 44.0, 0.18, 0.36, 2.4, 52.0),
+        ("Destiny Udogie", "Tottenham", "Premier League", "LB", "Inverted Underlapping Fullback", 21, 2500, 0, 0, 0, 0, 4.1, 240.0, 3.2, 3.5, 10.1, 86.0, 4.2, 56.0, 0.08, 0.14, 2.9, 61.0),
+
+        # --- DEFENSIVE & CENTRAL MIDFIELD (CDM, CM) ---
+        ("Rodri", "Manchester City", "Premier League", "CDM", "Holding Playmaker", 27, 2930, 0, 0, 0, 0, 9.8, 590.2, 2.5, 8.4, 14.8, 92.3, 4.2, 71.0, 0.18, 0.16, 2.3, 68.4),
+        ("Declan Rice", "Arsenal", "Premier League", "CDM", "Box-to-Box Destroyer", 25, 3220, 0, 0, 0, 0, 6.5, 410.0, 2.1, 5.8, 11.2, 90.8, 4.6, 62.5, 0.16, 0.18, 2.1, 62.0),
+        ("Aurélien Tchouaméni", "Real Madrid", "La Liga", "CDM", "Holding Destroyer", 24, 2300, 0, 0, 0, 0, 6.8, 440.0, 1.6, 5.2, 10.9, 92.1, 4.5, 68.0, 0.10, 0.08, 1.2, 65.0),
+        ("João Palhinha", "Bayern Munich", "Bundesliga", "CDM", "Pure Ball Winner", 28, 2600, 0, 0, 0, 0, 4.1, 280.0, 0.8, 3.1, 8.2, 82.5, 6.8, 64.0, 0.10, 0.04, 1.1, 52.0),
+        ("Martín Zubimendi", "Real Sociedad", "La Liga", "CDM", "Holding Playmaker", 25, 2750, 0, 0, 0, 0, 6.4, 395.0, 1.5, 4.9, 10.1, 88.0, 4.1, 63.5, 0.12, 0.09, 1.4, 60.0),
+        ("Alexis Mac Allister", "Liverpool", "Premier League", "CM", "Deep-Lying Playmaker", 25, 2600, 0, 0, 0, 0, 7.1, 420.0, 1.9, 5.9, 12.8, 87.5, 4.4, 52.0, 0.15, 0.20, 2.0, 61.5),
+        ("Bruno Guimarães", "Newcastle", "Premier League", "CM", "Deep-Lying Engine", 26, 3300, 0, 0, 0, 0, 7.2, 435.0, 2.4, 6.1, 13.5, 86.4, 4.8, 56.0, 0.17, 0.22, 2.4, 64.0),
+        ("Adam Wharton", "Crystal Palace", "Premier League", "CM", "Deep-Lying Playmaker", 20, 1400, 0, 0, 0, 0, 6.9, 415.0, 1.7, 5.5, 11.5, 85.8, 4.9, 50.0, 0.08, 0.16, 1.3, 58.0),
+        ("Kobbie Mainoo", "Manchester United", "Premier League", "CM", "Box-to-Box Progressor", 19, 1900, 0, 0, 0, 0, 5.2, 310.0, 2.2, 3.8, 12.0, 86.2, 3.6, 48.5, 0.15, 0.10, 2.1, 65.0),
+        ("Eduardo Camavinga", "Real Madrid", "La Liga", "CM", "Dynamic Progressor", 21, 1950, 0, 0, 0, 0, 6.2, 370.0, 2.6, 4.8, 12.6, 89.2, 4.7, 58.0, 0.08, 0.14, 1.8, 67.5),
+
+        # --- ATTACKING MIDFIELD & WIDE MIDFIELD (CAM, LM, RM) ---
+        ("Florian Wirtz", "Bayer Leverkusen", "Bundesliga", "CAM", "Creative Playmaker", 21, 2450, 0, 0, 0, 0, 7.6, 390.0, 4.2, 6.2, 14.1, 83.5, 2.2, 38.0, 0.38, 0.44, 5.8, 61.0),
+        ("Martin Ødegaard", "Arsenal", "Premier League", "CAM", "Advanced Playmaker", 25, 3050, 0, 0, 0, 0, 8.5, 420.0, 3.2, 7.2, 13.8, 86.8, 2.1, 42.0, 0.32, 0.41, 4.8, 59.0),
+        ("Jude Bellingham", "Real Madrid", "La Liga", "CAM", "Shadow Striker", 20, 2500, 0, 0, 0, 0, 5.8, 310.0, 3.4, 4.8, 11.5, 87.2, 3.1, 58.0, 0.54, 0.28, 6.8, 62.0),
+
+        # --- WINGERS (LW, RW) ---
+        ("Bukayo Saka", "Arsenal", "Premier League", "RW", "Creative Winger", 22, 2930, 0, 0, 0, 0, 5.1, 280.0, 3.9, 4.4, 11.8, 80.2, 2.4, 46.0, 0.42, 0.35, 7.4, 54.0),
+        ("Vinícius Júnior", "Real Madrid", "La Liga", "LW", "Inside Forward", 23, 2100, 0, 0, 0, 0, 4.8, 260.0, 5.2, 3.9, 13.2, 78.4, 1.8, 35.0, 0.58, 0.31, 8.9, 56.5),
+        ("Kylian Mbappé", "Real Madrid", "La Liga", "LW", "Inside Forward", 25, 2600, 0, 0, 0, 0, 4.2, 230.0, 4.8, 3.7, 10.5, 82.0, 1.1, 40.0, 0.72, 0.28, 8.4, 55.0),
+        ("Michael Olise", "Bayern Munich", "Bundesliga", "RW", "Creative Winger", 22, 1280, 0, 0, 0, 0, 5.8, 290.0, 3.8, 4.8, 12.0, 79.5, 2.5, 45.0, 0.46, 0.41, 6.8, 58.0),
+        ("Nico Williams", "Athletic Bilbao", "La Liga", "LW", "Direct Winger", 21, 2400, 0, 0, 0, 0, 3.9, 210.0, 4.6, 3.2, 11.2, 76.2, 1.9, 39.0, 0.28, 0.32, 6.1, 57.0),
+        ("Bryan Mbeumo", "Brentford", "Premier League", "RW", "Direct Inside Forward", 24, 2100, 0, 0, 0, 0, 4.4, 220.0, 3.4, 3.5, 9.8, 76.8, 2.2, 44.0, 0.45, 0.29, 5.6, 52.0),
+        ("Antoine Semenyo", "Bournemouth", "Premier League", "RW", "Powerful Direct Winger", 24, 2200, 0, 0, 0, 0, 3.6, 180.0, 3.8, 2.9, 10.2, 74.5, 2.6, 49.0, 0.38, 0.18, 5.9, 56.0),
+
+        # --- CENTRAL STRIKERS (ST) ---
+        ("Erling Haaland", "Manchester City", "Premier League", "ST", "Box Poacher", 23, 2550, 0, 0, 0, 0, 1.6, 80.0, 0.9, 1.2, 4.1, 75.0, 0.8, 58.5, 0.88, 0.12, 7.8, 48.0),
+        ("Ollie Watkins", "Aston Villa", "Premier League", "ST", "Complete Target Forward", 28, 3220, 0, 0, 0, 0, 2.4, 120.0, 2.1, 2.0, 6.8, 72.8, 1.4, 42.0, 0.52, 0.24, 6.5, 49.0),
+        ("Alexander Isak", "Newcastle", "Premier League", "ST", "Dynamic Striker", 24, 2260, 0, 0, 0, 0, 2.2, 110.0, 2.6, 1.8, 6.2, 76.5, 1.2, 41.0, 0.68, 0.18, 6.2, 53.0),
+        ("Rasmus Højlund", "Manchester United", "Premier League", "ST", "Channel Runner", 21, 2170, 0, 0, 0, 0, 1.8, 90.0, 1.4, 1.4, 5.0, 74.0, 1.3, 49.0, 0.48, 0.11, 4.8, 45.0),
+        ("Joshua Zirkzee", "Manchester United", "Premier League", "ST", "Deep-Lying Link Striker", 23, 2600, 0, 0, 0, 0, 3.8, 180.0, 2.9, 3.4, 9.4, 78.2, 2.1, 51.0, 0.39, 0.22, 5.4, 56.0),
+        ("Viktor Gyökeres", "Sporting CP", "Liga Portugal", "ST", "Power Forward", 26, 2900, 0, 0, 0, 0, 3.1, 170.0, 3.6, 2.8, 8.9, 75.8, 1.7, 54.0, 0.74, 0.25, 7.9, 53.5)
+    ]
+
+    df = pd.DataFrame(data, columns=columns)
+    output_path = os.path.join("data", "scouting_master_2024.csv")
+    df.to_csv(output_path, index=False)
+    print(f"[SUCCESS] Multi-position dataset written with {len(df)} players to {output_path}")
+
+if __name__ == "__main__":
+    generate_multi_position_dataset()
